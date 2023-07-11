@@ -1,0 +1,26 @@
+IN GCP :
+
+VPC - global  - NO CIDR
+subnets - regional - CIDR  for each subnet
+
+there is no private and public subnets, while creating Vms we need to disable external Ip s
+
+
+
+
+In AWS :
+
+VPC - regional  - CIDR range 
+subnets - AZ s  - with in vpc CIDR range 
+
+by default private subnet , need to add IG for internet access and make it public
+
+
+
+in aws network flow :
+
+
+
+          ---   private subnet -- NAT in (public subnet )  - Privte Route table ( Via NAT) and local route 
+VPC ----
+          ---   Public subnet  -- Ineternet Gateway - Public Route table ( Via IGW) and local route 
