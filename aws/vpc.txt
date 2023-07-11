@@ -24,3 +24,19 @@ in aws network flow :
           ---   private subnet -- NAT in (public subnet )  - Privte Route table ( Via NAT) and local route 
 VPC ----
           ---   Public subnet  -- Ineternet Gateway - Public Route table ( Via IGW) and local route 
+
+
+
+Address ranges to be use by private networks are:
+
+Class A: 10.0.0.0 to 10.255.255.255
+Class B: 172.16.0.0 to 172.31.255.255
+Class C: 192.168.0.0 to 192.168.255.255
+
+
+Subnet calculator :
+
+https://mxtoolbox.com/subnetcalculator.aspx
+https://www.ipaddressguide.com/cidr
+
+
