@@ -1,0 +1,21 @@
+psql -h 10.6.32.6 -p 5432 -U postgres -d <database>
+
+
+java -jar metabase.jar migrate release-locks
+
+
+journalctl -xfe -u metabase
+
+
+metabase.tools.infra.apna.co
+
+
+
+
+sudo certbot certonly --standalone --preferred-challenges http -d metabase.tools.infra.apna.co
+
+
+
+  /etc/letsencrypt/live/metabase.tools.infra.apna.co/fullchain.pem
+
+  /etc/letsencrypt/live/metabase.tools.infra.apna.co/privkey.pem

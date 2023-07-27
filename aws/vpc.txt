@@ -40,3 +40,19 @@ https://mxtoolbox.com/subnetcalculator.aspx
 https://www.ipaddressguide.com/cidr
 
 
+
+
+
+EKS :
+
+AKIAR4FECSZDVZH24O75
+
+fSMtO6FtsF0NQ/TcOI5+7Q+K8F0TUzlSQjfMFJRM
+
+eksctl create cluster -f eks-1.yaml
+
+
+eksctl delete cluster -f cluster.yaml --disable-nodegroup-eviction
+
+
+
