@@ -159,7 +159,28 @@ kubectl create configmap config-2 --namespace=demo --from-file=nginx.conf=nginx.
 
 to get Yaml file form config map :
 
-kubectl get configmap config-2 -o yaml -n demo > config-nginx.yaml
+kubectl get configmap config-1 -o yaml -n demo > con.yaml
+
+
+Task 1 :
+
+1) Deploment file  with alpine linux image 
+2) Config map - list of  env variable , create/mount nginx config file in /opt
+3) secrets - set API key , Password encode as env variables , create/mount json key 
+
+try Creating config/secret from external files and inline yaml files 
+
+
+
+
+
+echo -n 'birdsarentreal' | base64
+
+
+
+
+
+
         
 
 

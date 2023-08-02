@@ -1,4 +1,14 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-1
+  namespace: demo
+data:
+  nginx.json: hello i ma json
+  nginx1.json: hello i ma json 2
+
+---
+apiVersion: v1
 kind: Pod
 metadata:
   name: my-pod
@@ -8,22 +18,9 @@ spec:
     - name: linux
       image: alpine:latest
       command: ["sleep", "infinity"]
-      env:
-       - name: USER 
-         valueFrom:
-            configMapKeyRef:
-               name: config-1
-               key: name
-      envFrom:
-        - configMapRef:
-            name: config-1
       volumeMounts:
          - name: config
            mountPath: "/opt"
-           readOnly: true
-
-         - name: config-2
-           mountPath: "/opt/nginx"
            readOnly: true
 
   volumes:
@@ -31,16 +28,12 @@ spec:
     configMap:
       name: config-1
       items:
-      - key: "config.txt"
-        path: "env.txt"
-      - key: "config-1.txt"
-        path: "env-1.txt"
+      - key: "nginx1.json"
+        path: "key1.json"
 
-  - name: config-2
-    configMap:
-      name: config-2
-      items:
-      - key: "nginx.conf"
-        path: "nginx.conf"
+
+
+
+
 
 
