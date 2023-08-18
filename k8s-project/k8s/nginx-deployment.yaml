@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sai-nginx-deployment
+  namespace: sai-web
+  labels:
+    app: web
+spec:
+  selector:
+      matchLabels:
+          app: web
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 10%
+  replicas: 3
+  template: 
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers: 
+      - name: sai-nginx-deployment
+        image: saikiranmarineni/project:nginx
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            memory: "256Mi"    # Requesting 256 megabytes of memory
+            cpu: "100m"        # Requesting 100 milli CPUs (0.1 CPU)
+          limits:
+            memory: "500Mi"    # Limiting memory usage to 512 megabytes
+            cpu: "500m"
+        readinessProbe:
+            httpGet:
+              path: /page1.html
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+        livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+        volumeMounts:                # mouting config map in path , we need to require mention voulmes from confog map section
+            - name: nginx-conf
+              mountPath: /home
+            - name: nginx
+              mountPath: /home/nginx.txt  
+              subPath: nginx.txt    # we can use subpath to mount in same dir with out creating additional one or mounting multiple files with in single directory 
+
+        envFrom:   # mounting env varible present in secret or we can use config map also 
+            - secretRef:
+               name: env-secret 
+        env: 
+          - name: NAME 
+            value: webserver 
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-config
+        - name: nginx
+          secret:
+            secretName: secret
+
+
+  
+
+
+
+
+
+
+
+
+
+
+         
+     
+
+
+
+
+

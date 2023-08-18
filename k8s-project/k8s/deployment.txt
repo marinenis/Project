@@ -1,0 +1,98 @@
+Files required :
+
+1) nginx-deployment.yaml
+2) secret.yaml
+3) env-secret.yaml
+4) kubectl create configmap nginx-config --from-file=nginx.conf -n sai-web
+
+
+
+
+
+
+some important commands :
+
+<kubectl get cs>  # to know health of k8s composnets 
+
+ex :
+
+saikiran.marineni@saikiranmarineni-MacBook-Air k8s % kubectl get cs
+Warning: v1 ComponentStatus is deprecated in v1.19+
+NAME                 STATUS    MESSAGE   ERROR
+etcd-0               Healthy
+scheduler            Healthy   ok
+controller-manager   Healthy   ok
+
+
+deloyment rollout history and rollback :
+
+to list history :
+
+  <kubectl rollout history deployment.apps/sai-nginx-deployment -n sai-web>
+
+Roll back :
+
+   <kubectl rollout undo deployment.apps/sai-nginx-deployment --to-revision=1 -n sai-web>
+
+https://k8syaml.com/   - yaml generator 
+
+Debug pod or ephermal conatiner :
+
+<kubectl debug -it sai-nginx-deployment-5f468dcf58-rb49s --image=ubuntu -n sai-web>
+
+it will create  additional debug container with in same pod  using this we can trouble shoot
+
+
+
+
+
+
+Probes :
+
+Liveness probe : checks continuesly - restart container if it failes 
+Readyness probe : check continuesly -  K8s stop sending traffic if it fails , like helath check at LB level , it will restart container 
+startup probe : like one time job, whener apps take more time to start
+
+
+
+1) Api version -  apps/v1
+2) kind - deployment 
+3) metadata -  deployment level - name,namespace,lables
+4) spec  -- selector = lables of deployment - match labels 
+         --  replicas 
+         --  strategy - rolling update - max unavailable  - max surge 
+         --  template ( pod specifications)
+                  -- metadate - lables
+                  -- spce 
+                       -- container - image , pull policy etc 
+                       -- resources requets and limit s
+
+
+
+environment variables :
+
+Mounting config from config map to a path in conatiner :
+
+Create a config map from external file :
+
+kubectl create configmap nginx-config --from-file=nginx.conf -n sai-web
+
+
+to get yaml from existed config map
+
+kubectl get configmap nginx-config -o yaml -n sai-web > nginx.conf.yaml
+
+
+secret and config map :
+
+https://humanitec.com/blog/handling-environment-variables-with-kubernetes
+
+
+Affinity :
+
+https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+
+
+
+
+                       

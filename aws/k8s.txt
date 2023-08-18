@@ -176,6 +176,14 @@ try Creating config/secret from external files and inline yaml files
 
 echo -n 'birdsarentreal' | base64
 
+base64 -w 0 nginx.conf > nginx.txt
+
+
+kubectl create secret generic my-secret  --from-literal=encoded-secret=base64encodedvalue
+
+
+
+
 
 
 

@@ -1,0 +1,31 @@
+apiVersion: v1
+data:
+  nginx.conf: |-
+    # from configmap
+
+    events {}
+
+    http {
+      server {
+        listen 80;
+        server_name localhost;
+
+        location / {
+          root /usr/share/nginx/html;
+          index index.html;
+        }
+
+        location = /health {
+                access_log off;
+                add_header 'Content-Type' 'application/json';
+                return 200 '{"status":"UP"}';
+        }
+      }
+    }
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2023-08-17T11:30:26Z"
+  name: nginx-config
+  namespace: sai
+  resourceVersion: "1943"
+  uid: 622a8498-61aa-40f4-8a08-a4d4876e962b

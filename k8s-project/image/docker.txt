@@ -1,0 +1,48 @@
+
+buildimage :
+
+docker build -t <imagename> . 
+
+
+
+docker push saikiranmarineni/project:latest
+docker tag sai-nginx:latest saikiranmarineni/project:tagname:latest
+
+
+docker push <your-dockerhub-username>/<repository-name>:<tag>
+
+
+
+docker pull saikiranmarineni/projectnginx/:nginx
+
+
+docker image tag sai-nginx saikiranmarineni/project:nginx
+
+docker image push registry-host:5000/myadmin/rhel-httpd:latest
+
+
+
+kubectl create secret docker-registry image-secret --docker-server=https://index.docker.io/v1/ --docker-username=saikiranmarineni --docker-password=dckr_pat_LEtE4UMrR9qy7Yep2Ocuq0oCTD0
+
+
+kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "image-secret"}]}'
+
+kubectl run nginx --image=saikiranmarineni/project:nginx --restart=Never -n test 
+
+
+
+
+kubectl create secret generic image-secret \
+    --from-file=.dockerconfigjson=config.json \
+    --type=kubernetes.io/dockerconfigjson
+
+kubectl get secret image-secret --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode
+
+
+
+
+saikiranmarineni
+
+dckr_pat_LEtE4UMrR9qy7Yep2Ocuq0oCTD0
+
+
