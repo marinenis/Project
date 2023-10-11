@@ -1,0 +1,6 @@
+- hosts: 127.0.0.1
+  gather_facts: true
+  become: yes
+  become_method: sudo
+  roles:
+    - sentry

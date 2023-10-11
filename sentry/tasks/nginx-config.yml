@@ -1,0 +1,36 @@
+---
+- name: Copy SSL certificate from GCS
+  ansible.builtin.command: gsutil cp gs://apna-certs/star.infra.apna.co/star_infra_apna_co.tgz /opt/ssl/star_infra_apna_co.tgz
+  changed_when: false 
+
+- name: Untar SSL certificate
+  ansible.builtin.unarchive:
+    src: /opt/ssl/star_infra_apna_co.tgz
+    dest: /opt/ssl/
+
+- name: Copy nginx.conf file 
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-enabled/nginx.conf
+  notify: Start Nginx
+
+- name: Flush Handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Start DNS transaction
+  ansible.builtin.shell: gcloud dns record-sets transaction start --zone=infra
+  args:
+    chdir: /opt
+  changed_when: false
+
+- name: Start DNS transaction
+  ansible.builtin.shell: gcloud alpha dns record-sets transaction add "{{ IP }}" --name={{ NAME }}.infra.apna.co --ttl=60 --type=A --zone=infra
+  args:
+    chdir: /opt
+  changed_when: false
+
+- name: Start DNS transaction
+  ansible.builtin.shell: gcloud dns record-sets transaction execute --zone=infra
+  args:
+    chdir: /opt
+  changed_when: false

@@ -1,0 +1,12 @@
+---
+- name: Start Sentry
+  ansible.builtin.command:
+    cmd: "docker compose up -d"
+  args:
+    chdir: /opt/sentry
+
+- name: Start Nginx
+  ansible.builtin.command:
+    cmd: "systemctl restart nginx"
+  
+

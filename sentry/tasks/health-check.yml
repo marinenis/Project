@@ -1,0 +1,9 @@
+- name: Pause play until a URL is reachable from this host
+  ansible.builtin.uri:
+    url: "https://{{ NAME }}.infra.apna.co/auth/login/sentry/"
+    follow_redirects: none
+    method: GET
+  register: _result
+  until: _result.status == 200
+  retries: 5
+  delay: 30

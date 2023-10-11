@@ -1,0 +1,36 @@
+- name: Get deploy variables
+  shell: cat /etc/deployment/deploy_config.yml
+  register: data
+
+- name: Parse YAML content
+  set_fact:
+    deploy_variables: "{{ data.stdout | from_yaml_all | list }}"
+
+- name: Set role variable
+  set_fact:
+    role: "{{ deploy_variables[0]['role'] }}"
+    DB_NAME: "{{ deploy_variables[0]['app'] }}"
+    NAME: "{{ deploy_variables[0]['app'] }}"
+
+- name: software-install
+  include: software-install.yml
+  when: role == 'sentry'
+
+- name: sentry-config
+  include: sentry-config.yml
+  when: role == 'sentry'
+  
+- name: sentry-install
+  include: sentry-install.yml
+  when: role == 'sentry'
+
+- name: nginx-config
+  include: nginx-config.yml
+  when: role == 'sentry'
+
+- name: health-check
+  include: health-check.yml
+  when: role == 'sentry'
+
+
+

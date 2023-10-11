@@ -1,0 +1,69 @@
+- name: Create sentry and ssl directories
+  file:
+    path: "/opt/{{ item }}"
+    state: directory
+  loop:
+    - sentry
+    - ssl
+
+- name: Clone Sentry repository
+  git:
+    repo: https://github.com/getsentry/self-hosted.git
+    dest: /opt/sentry
+    force: yes
+
+- name: Check if the database exists
+  shell: |
+    gcloud sql databases list --instance={{ SQL_INSTANCE }} | grep {{ DB_NAME }} | wc -l
+  register: db_check
+  ignore_errors: yes  # Ignore errors if the database doesn't exist
+
+- name: Create the database if it doesn't exist
+  shell: |
+    gcloud sql databases create {{ DB_NAME }} --instance={{ SQL_INSTANCE }}
+  when: db_check.stdout == "0"  # Only run if the previous task failed (database doesn't exist)
+
+- name: Display gcloud command output using role variables
+  debug:
+    var: gcloud_output.stdout
+
+- name: Assign internal IP address to a variable
+  set_fact:
+    IP: "{{ ansible_facts.default_ipv4.address }}"
+
+- name: Display internal IP address
+  debug:
+    var: IP
+
+- name: Accessing secrets from GCP secret manager
+  shell: |
+        gcloud secrets versions access latest --secret="sentry" --out-file="/opt/.secret.yml"
+
+- name: Get deploy variables
+  shell: cat /opt/.secret.yml
+  register: secrets
+
+- name: Parse YAML content
+  set_fact:
+    secret_variables: "{{ secrets.stdout | from_yaml_all | list }}"
+
+- name: Set role variable
+  set_fact:
+    DB_PASSWORD: "{{ secret_variables[0]['DB_PASSWORD'] }}"
+    UI_PASSWORD: "{{ secret_variables[0]['UI_PASSWORD'] }}"
+
+- name: Copy temp1.j2 to /opt
+  template:
+    src: sentry.conf.example.py.j2
+    dest: /opt/sentry/sentry/sentry.conf.example.py
+
+- name: Copy temp2.j2 to /opt
+  template:
+    src: config.example.yml.j2
+    dest: /opt/sentry/relay/config.example.yml
+    
+
+
+
+
+

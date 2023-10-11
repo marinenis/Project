@@ -1,0 +1,17 @@
+---
+- name: Run install.sh script
+  ansible.builtin.command:
+    cmd: "./install.sh --report-self-hosted-issues --skip-user-prompt"
+  args:
+    chdir: /opt/sentry
+  register: install_result
+  notify: Start Sentry
+
+- name: Flush Handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Create sentry user 
+  ansible.builtin.command:
+    cmd: "docker compose run --rm web createuser --superuser --email {{ UI_USER }} --password {{ UI_PASSWORD }}"
+  args:
+    chdir: /opt/sentry
